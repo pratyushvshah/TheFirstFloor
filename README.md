@@ -37,13 +37,13 @@ TheFirstFloor™ is aimed towards creating a CLI for managaing your music requir
 
 ### Features
 
-1. Login/Create user (Supporting hashing of passwords)
-1. Stream songs online
-1. Download songs from all major sources (YouTube, Spotify, SoundCloud, etc.) as well and some miscellaneous sites
-1. Search for podcasts
-1. Listen to radio stations all around the world
-1. Identify music from media files or by recording
-1. Strong error logging to help with future debugging
+1. Login/Create user (Supporting hashing of passwords).
+1. Stream songs online.
+1. Download songs from all major sources (YouTube, Spotify, SoundCloud, etc.) as well and some miscellaneous sites.
+1. Search for podcasts.
+1. Listen to radio stations all around the world.
+1. Identify music from media files or by recording.
+1. Strong error logging to help with future debugging.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -92,11 +92,11 @@ There's no instructions, just run `main.py` in your terminal and follow the inst
 <!-- ROADMAP -->
 ## TODO
 
-- [ ] Make a playlist handler to play store a user's playlist and give option to download and play locally
-- [ ] Make a better UI for streaming music, particularly the searching aspect
-- [ ] Make a better UI for radio tracks to display 15 countries/stations at a time
-- [ ] Stream podcasts in the program rather than redirecting
-- [ ] Make a help menu
+- [ ] Make a playlist handler to play store a user's playlist and give option to download and play locally.
+- [ ] Make a better UI for streaming music, particularly the searching aspect.
+- [ ] Make a better UI for radio tracks to display 15 countries/stations at a time.
+- [ ] Stream podcasts in the program rather than redirecting.
+- [ ] Make a help menu.
 
 See the [open issues](https://github.com/pratyushvshah/TheFirstFloor/issues) for a full list of proposed features (and known issues).
 
