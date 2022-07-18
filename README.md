@@ -132,4 +132,4 @@ Pratyush Shah - <a href = "mailto: pratyushvshah@gmail.com">Email</a>, [LinkedIn
 
 Project Link: [https://github.com/pratyushvshah/TheFirstFloor](https://github.com/pratyushvshah/TheFirstFloor)
 
-<p align="right">(<a href="#top">back to top</a>)</p> 
+<p align="right">(<a href="#top">back to top</a>)</p>
