@@ -43,6 +43,7 @@ TheFirstFloor™ is aimed towards creating a CLI for managaing your music requir
 1. Search for podcasts
 1. Listen to radio stations all around the world
 1. Identify music from media files or by recording
+1. Strong error logging to help with future debugging
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
