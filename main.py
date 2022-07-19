@@ -281,7 +281,8 @@ Hit 9 to return to menu
         menu(username)
     else:
         country = radio.getcountry()
-        radio.getstation(country)
+        name, link = radio.getstation(country)
+        radio.playradio(name, link)
         radiostream(username)
 
 

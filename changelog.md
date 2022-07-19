@@ -13,7 +13,6 @@ TODO:
 
 1. Make a playlist handler to play store a user's playlist and give option to download and play locally
 1. Make a better UI for streaming music, particularly the searching aspect
-1. Make a better UI for radio tracks to display 15 countries/stations at a time
 1. Stream podcasts in the program rather than redirecting
 1. Make a help menu
 
