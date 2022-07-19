@@ -42,11 +42,9 @@ def getcountry():
             choice = int(choice)
             if choice > len(country):
                 print("[red]Invalid input.[/red]")
-                print("w")
                 continue
             elif choice < 1:
                 print("[red]Invalid input.[/red]")
-                print("a")
                 continue
             else:
                 return country[choice - 1]
