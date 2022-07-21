@@ -39,7 +39,7 @@ TheFirstFloor™ is aimed towards creating a CLI for managaing your music requir
 
 1. Login/Create user (Supporting hashing of passwords).
 1. Stream songs online.
-1. Download songs from all major sources (YouTube, Spotify, SoundCloud, etc.) as well and some miscellaneous sites.
+1. Download songs from all major sources (YouTube, Spotify, SoundCloud, etc.) as well as some miscellaneous sites.
 1. Search for podcasts.
 1. Listen to radio stations all around the world.
 1. Identify music from media files or by recording.
