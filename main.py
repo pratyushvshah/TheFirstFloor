@@ -403,5 +403,5 @@ def updatesettings(username):
 if __name__ == '__main__':
 
     # Override the default exception handling
-    #sys.excepthook = errorlogging
+    sys.excepthook = errorlogging
     main()
