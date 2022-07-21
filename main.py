@@ -4,6 +4,7 @@ import sqlalchemy as sql
 from rich import print
 import webbrowser
 import filekeys
+import miscellaneous.settings as settings
 import miscellaneous.login as login
 from miscellaneous.statfunc import clear, banner, errorlogging, console
 import download.ytdownload as ytdownload
@@ -23,6 +24,7 @@ with console.status("Connecting to the database...", spinner = "dots"):
     db = eng.connect()
     time.sleep(1.5)
 
+NUMSEARCHES = 0
 
 def main():
     username = loginblock()
@@ -42,6 +44,7 @@ Hit 2 to Register an account with TheFirstFloor™
             clear()
             banner()
             username = login.login()
+            updatesettings(username)
             return username
         elif choice == '2':
             clear()
@@ -60,6 +63,7 @@ Hit 2 to Register an account with TheFirstFloor™
                     print()
                     print(f'[green]{msg}[/green]')
                     username = login.login()
+                    updatesettings(username)
                     return username
         else:
             loginblock()
@@ -71,7 +75,7 @@ def menu(username):
     banner()
     name = db.execute('SELECT fullname FROM users WHERE username = %s', username).fetchall()[0]._asdict()
     name = name['fullname']
-    print(f'Welcome to TheFirstFloor™, {name}!')
+    print(f'\nWelcome to TheFirstFloor™, {name}!')
     print('''
 ----------------------------------------MAIN MENU--------------------------------------------------
 Hit 1 to stream music
@@ -79,11 +83,12 @@ Hit 2 to download songs
 Hit 3 to search for podcasts
 Hit 4 to listen to radio
 Hit 5 to identify songs
-Hit 6 to quit
+Hit 6 to change settings
+Hit 9 to quit
 ''', end="")
     while True:
         choice = input("")
-        if choice not in ['1', '2', '3', '4', '5', '6']:
+        if choice not in ['1', '2', '3', '4', '5','6', '9']:
             menu(username)
         choice = int(choice)
         if choice == 1:
@@ -97,6 +102,8 @@ Hit 6 to quit
         elif choice == 5:
             identify(username)
         elif choice == 6:
+            changesettings(username)
+        elif choice == 9:
             clear()
             banner()
             sys.exit('''
@@ -116,7 +123,7 @@ Hit 9 if you want to return to the previous screen.
 ''')
     choice = input("")
     if choice == '1':
-        result = songstream.ytsearch(username)
+        result = songstream.ytsearch(NUMSEARCHES)
         if result == False:
             stream(username)
         else:
@@ -167,7 +174,7 @@ Hit 3 to download a playlist
 Hit 9 to return to the previous screen
 ''')
     if choice == '1':
-        result = ytdownload.ytsearch()
+        result = ytdownload.ytsearch(NUMSEARCHES)
         if result == False:
             youtubedownloader(username)
         else:
@@ -280,8 +287,8 @@ Hit 9 to return to menu
     if choice == '9':
         menu(username)
     else:
-        country = radio.getcountry()
-        name, link = radio.getstation(country)
+        country = radio.getcountry(NUMSEARCHES)
+        name, link = radio.getstation(country, NUMSEARCHES)
         radio.playradio(name, link)
         radiostream(username)
 
@@ -316,7 +323,7 @@ def identify(username):
         query = query1 + " " + query2
         
         # If the user wants to download the song, program does a youtube search for the result
-        result = ytdownload.ytsearch(query)
+        result = ytdownload.ytsearch(NUMSEARCHES, query)
         
         # If no song is found, returns to identifying menu
         if result == False:
@@ -347,8 +354,54 @@ def identify(username):
                     continue
 
 
+def changesettings(username):
+    global NUMSEARCHES
+    clear()
+    banner()
+    choice = input('''
+----------------------------------------------SETTINGS---------------------------------------------
+Hit 1 to change your username
+Hit 2 to change your password
+Hit 3 to change the number of search results per page
+Hit 9 to return to the menu
+''')
+    while True:
+        if choice == '1':
+            clear()
+            banner()
+            result, newusername = settings.changeusername(username)
+            if result == False:
+                changesettings(username)
+            else:
+                username = newusername
+            changesettings(username)
+        elif choice == '2':
+            clear()
+            banner()
+            settings.changepassword(username)
+            changesettings(username)
+        elif choice == '3':
+            clear()
+            banner()
+            results, num = settings.changesearchresults(username, NUMSEARCHES)
+            if results == False:
+                changesettings(num)
+            NUMSEARCHES = num
+            updatesettings(username)
+            changesettings(username)
+        elif choice == '9':
+            menu(username)
+        else:
+            changesettings(username)
+
+
+# Updates global variables for user settings
+def updatesettings(username):
+    global NUMSEARCHES
+    NUMSEARCHES = db.execute('SELECT numsearches FROM musicsettings WHERE username = %s', username).fetchall()[0]._asdict()['numsearches']
+
 if __name__ == '__main__':
 
     # Override the default exception handling
-    sys.excepthook = errorlogging
+    #sys.excepthook = errorlogging
     main()
