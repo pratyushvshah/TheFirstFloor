@@ -1,5 +1,3 @@
-import os
-import hashlib
 import re
 from datetime import datetime, timezone
 import sqlalchemy as sql
@@ -7,6 +5,7 @@ from rich.console import Console
 from rich import print
 import time
 import filekeys
+from miscellaneous.statfunc import hashpass, verify
 
 # Configure console for using rich module
 console = Console()
@@ -44,6 +43,12 @@ def login():
 
                     # Updates database to reflect when the user last logged in
                     db.execute("UPDATE users SET lastlogin = %s WHERE username = %s", datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S'), username)
+
+                # Error checking for when user is not in necessary tables within the database
+                settings = db.execute('SELECT * FROM musicsettings WHERE username = %s', username).fetchall()
+                if settings == []:
+                    db.execute('INSERT INTO musicsettings (Username) VALUES (%s)', username)
+                    
                     time.sleep(1.5)
                 return username
             else:
@@ -159,33 +164,4 @@ Password must follow the following criteria:
 def updateCredentials(fullname, email, username, password, salt):
 
     db.execute("INSERT INTO users (fullname, email, username, password, salt) VALUES (%s, %s, %s, %s, %s)", fullname, email, username, password, salt)
-
-
-# Creates hex of a password
-def hashpass(password):
-
-    # Generates a random salt
-    salt = os.urandom(32).hex().encode()
-
-    # Convert password to byte 
-    plaintext = password.encode()
-
-    # Hash the password
-    hash = hashlib.pbkdf2_hmac('sha512', plaintext, salt, 500000)
-
-    # Return the salt and the hashed password
-    return salt.decode(), hash.hex()
-
-
-# Returns hex of the inputted password
-def verify(salt, password):
-
-    # Convert password and salt to byte
-    plaintext = password.encode()
-    salt = salt.encode()
-
-    # Hash the password
-    hash = hashlib.pbkdf2_hmac('sha512', plaintext, salt, 500000)
-
-    # Return the hashed password
-    return hash.hex()
+    db.execute('INSERT INTO musicsettings (Username) VALUES (%s)', username)
