@@ -4,6 +4,7 @@ from dateutil import tz
 import logging
 import traceback
 import sys
+import hashlib
 from rich import print
 from rich.console import Console
 
@@ -19,6 +20,7 @@ UP / DOWN - Seek 60 seconds
 [yellow]For a full list of options, visit: https://mpv.io/manual/master/#interactive-control [/yellow]
 [yellow]If an error occurs, just hit enter to be redirected.[/yellow]
 '''
+
 
 # Clears terminal
 def clear():
@@ -47,6 +49,36 @@ def banner():
 --------------------------------------WELCOME TO TheFirstFloor™------------------------------------
                                     We are the Poor Man's Spotify!
 """, end="")
+
+
+# Creates hex of a password
+def hashpass(password):
+
+    # Generates a random salt
+    salt = os.urandom(32).hex().encode()
+
+    # Convert password to byte 
+    plaintext = password.encode()
+
+    # Hash the password
+    hash = hashlib.pbkdf2_hmac('sha512', plaintext, salt, 500000)
+
+    # Return the salt and the hashed password
+    return salt.decode(), hash.hex()
+
+
+# Returns hex of the inputted password
+def verify(salt, password):
+
+    # Convert password and salt to byte
+    plaintext = password.encode()
+    salt = salt.encode()
+
+    # Hash the password
+    hash = hashlib.pbkdf2_hmac('sha512', plaintext, salt, 500000)
+
+    # Return the hashed password
+    return hash.hex()
 
 
 # Error logger
