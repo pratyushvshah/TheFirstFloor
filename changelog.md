@@ -1,6 +1,14 @@
 
 # Change Log
 
+## [1.1.0] - 2022-07-20
+
+Author: Pratyush Shah
+
+Added user settings functionality.
+
+Users can now change username, password and number of search results per page.
+
 ## [1.0.0] [Initial Release] - 2022-07-18
 
 Author: Pratyush Shah
