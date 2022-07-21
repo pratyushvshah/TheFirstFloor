@@ -94,7 +94,6 @@ There's no instructions, just run `main.py` in your terminal and follow the inst
 ## TODO
 
 - [ ] Make a playlist handler to play store a user's playlist and give option to download and play locally.
-- [ ] Make a better UI for streaming music, particularly the searching aspect.
 - [ ] Stream podcasts in the program rather than redirecting.
 - [ ] Make a help menu.
 
