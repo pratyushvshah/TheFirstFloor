@@ -7,3 +7,8 @@ CREATE TABLE users(
     Salt TEXT NOT NULL,
     LastLogin TIMESTAMP DEFAULT NULL
 );
+
+CREATE TABLE musicsettings(
+    Username TEXT NOT NULL,
+    NumSearches INT DEFAULT 10
+);
