@@ -8,9 +8,12 @@ from miscellaneous.statfunc import clear, mpvkeybindings
 # Configures the class for search
 rb = RadioBrowser()
 
+SEARCHRESULTS = 0
 
 # List of countries
-def getcountry():
+def getcountry(NUMSEARCHES):
+    global SEARCHRESULTS
+    SEARCHRESULTS = NUMSEARCHES
 
     # Gets a list of countries and sorts alphabetically
     countries = {i['name']:i['stationcount'] for i in rb.countries()}
@@ -25,7 +28,7 @@ def getcountry():
     total = len(countries)
 
     # Gets number of search pages
-    pages = int(total / 10) + 1
+    pages = int(total / SEARCHRESULTS) + 1
 
     # Navigation counter
     n = 0
@@ -37,21 +40,21 @@ def getcountry():
         tmpstations = []
         if n == 0:
             try:
-                tmpid = id[:10]
-                tmpcountry = country[:10]
-                tmpstations = stations[:10]
+                tmpid = id[:SEARCHRESULTS]
+                tmpcountry = country[:SEARCHRESULTS]
+                tmpstations = stations[:SEARCHRESULTS]
             except IndexError:
-                index = total % 10
+                index = total % SEARCHRESULTS
                 tmpid = id[-index:]
                 tmpcountry = country[-index:]
                 tmpstations = stations[-index:]
         else:
             try:
-                tmpid = id[n*10:(n+1)*10]
-                tmpcountry = country[n*10:(n+1)*10]
-                tmpstations = stations[n*10:(n+1)*10]
+                tmpid = id[n*SEARCHRESULTS:(n+1)*SEARCHRESULTS]
+                tmpcountry = country[n*SEARCHRESULTS:(n+1)*SEARCHRESULTS]
+                tmpstations = stations[n*SEARCHRESULTS:(n+1)*SEARCHRESULTS]
             except IndexError:
-                index = total % 10
+                index = total % SEARCHRESULTS
                 tmpid = id[-index:]
                 tmpcountry = country[-index:]
                 tmpstations = stations[-index:]
@@ -108,7 +111,9 @@ def getcountry():
 
 
 # List of stations in a country
-def getstation(country):
+def getstation(country, NUMSEARCHES):
+    global SEARCHRESULTS
+    SEARCHRESULTS = NUMSEARCHES
     clear()
 
     # Gets radio stations from a country whose links aren't broken
@@ -121,7 +126,7 @@ def getstation(country):
     total = len(stationname)
 
     # Gets number of search pages
-    pages = int(total / 10) + 1
+    pages = int(total / SEARCHRESULTS) + 1
 
     # Navigation counter
     n = 0
@@ -132,18 +137,18 @@ def getstation(country):
         tmpstationname = []
         if n == 0:
             try:
-                tmpid = id[:10]
-                tmpstationname = stationname[:10]
+                tmpid = id[:SEARCHRESULTS]
+                tmpstationname = stationname[:SEARCHRESULTS]
             except IndexError:
-                index = total % 10
+                index = total % SEARCHRESULTS
                 tmpid = id[-index:]
                 tmpstationname = stationname[-index:]
         else:
             try:
-                tmpid = id[n*10:(n+1)*10]
-                tmpstationname = stationname[n*10:(n+1)*10]
+                tmpid = id[n*SEARCHRESULTS:(n+1)*SEARCHRESULTS]
+                tmpstationname = stationname[n*SEARCHRESULTS:(n+1)*SEARCHRESULTS]
             except IndexError:
-                index = total % 10
+                index = total % SEARCHRESULTS
                 tmpid = id[-index:]
                 tmpstationname = stationname[-index:]
 
@@ -195,6 +200,7 @@ def getstation(country):
             except ValueError:
                 print("[red]Invalid input.[/red]")
                 continue
+
 
 def playradio(name, link):
 

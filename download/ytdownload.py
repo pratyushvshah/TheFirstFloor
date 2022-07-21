@@ -9,6 +9,7 @@ from dateutil import tz
 import time
 from miscellaneous.statfunc import clear, console
 
+SEARCHRESULTS = 0
 
 # Convert seconds to hours, minutes and seconds
 def seconds(seconds):
@@ -32,7 +33,9 @@ def convert_time(time):
 
 
 # Search for a video and returns false if not found or link if found
-def ytsearch(query=None):
+def ytsearch(NUMSEARCHES, query=None):
+    global SEARCHRESULTS
+    SEARCHRESULTS = NUMSEARCHES
     clear()
     if query is None:
         while True:
@@ -93,7 +96,52 @@ def ytsearch(query=None):
             author.append(yt.author)
             publishdate.append(str(yt.publish_date.date()))
             videolinks.append(link)
-        status.update(f"Generating table...")
+    
+    # ID of results
+    id = [str(i+1) for i in range(len(titles))]
+    total = len(titles)
+
+    # Gets number of search pages
+    pages = int(total / SEARCHRESULTS) + 1
+
+    # Navigation counter
+    n = 0
+    while n < pages:
+
+        # Temporary lists for each page
+        tmpid = []
+        tmptitles = []
+        tmpduration = []
+        tmpauthor = []
+        tmppublishdate = []
+        if n == 0:
+            try:
+                tmpid = id[:SEARCHRESULTS]
+                tmptitles = titles[:SEARCHRESULTS]
+                tmpduration = duration[:SEARCHRESULTS]
+                tmpauthor = author[:SEARCHRESULTS]
+                tmppublishdate = publishdate[:SEARCHRESULTS]
+            except IndexError:
+                index = total % SEARCHRESULTS
+                tmpid = id[-index:]
+                tmptitles = titles[-index:]
+                tmpduration = duration[-index:]
+                tmpauthor = author[-index:]
+                tmppublishdate = publishdate[-index:]
+        else:
+            try:
+                tmpid = id[n*SEARCHRESULTS:(n+1)*SEARCHRESULTS]
+                tmptitles = titles[n*SEARCHRESULTS:(n+1)*SEARCHRESULTS]
+                tmpduration = duration[n*SEARCHRESULTS:(n+1)*SEARCHRESULTS]
+                tmpauthor = author[n*SEARCHRESULTS:(n+1)*SEARCHRESULTS]
+                tmppublishdate = publishdate[n*SEARCHRESULTS:(n+1)*SEARCHRESULTS]
+            except IndexError:
+                index = total % SEARCHRESULTS
+                tmpid = id[-index:]
+                tmptitles = titles[-index:]
+                tmpduration = duration[-index:]
+                tmpauthor = author[-index:]
+                tmppublishdate = publishdate[-index:]
 
         # Sets up the table
         table = Table(title="\nSearch Results from YouTube", show_lines = True)
@@ -105,35 +153,46 @@ def ytsearch(query=None):
         status.update(f"Printing table...")
 
         # Adds the data to the table
-        for i in range(len(titles)):
-            table.add_row(str(i+1), titles[i], duration[i], publishdate[i], author[i])
+        for i in range(len(tmpid)):
+            table.add_row(tmpid[i], tmptitles[i], tmpduration[i], tmppublishdate[i], tmpauthor[i])
         print(table)
+        print(f"Showing results {tmpid[0]}-{tmpid[-1]} of {total}.")
 
-    # Asks user if their song is in the list
-    while True:
-        choice = input("Is the song you want to download in the list? (Y/N): ").strip().lower()
-        if choice == "y":
-            break
-        elif choice == "n":
-            print("[yellow]Please be more specific with your search.[/yellow]")
-            ytsearch()
-            break
-        else:
-            print("[red]Invalid input.[/red]")
-            continue
-    
-    # Asks user for the video ID to download
-    while True:
-        try:
-            choice = int(input("Enter the ID of the video you want to download: "))
-            if choice > len(titles):
+        # Gets the ID of the song
+        while True:
+            choice = input("Press n to go to the next page, b to go back or enter the the ID of the video you want to download\n").lower().strip()
+            
+            # Error handling and returning the country
+            try:
+                if choice == "n":
+                    if n == pages - 1:
+                        clear()
+                        n = 0
+                        break
+                    clear()
+                    n += 1
+                    break
+                elif choice == "b":
+                    if n == 0:
+                        clear()
+                        n = pages - 1
+                        break
+                    clear()
+                    n -= 1
+                    break
+                else:
+                    choice = int(choice)
+                    if choice > total:
+                        print("[red]Invalid input.[/red]")
+                        continue
+                    elif choice < 1:
+                        print("[red]Invalid input.[/red]")
+                        continue
+                    else:
+                        return videolinks[choice-1]
+            except ValueError:
                 print("[red]Invalid input.[/red]")
                 continue
-            break
-        except ValueError:
-            print("[red]Invalid input.[/red]")
-            continue
-    return videolinks[choice-1]
 
 
 # Download a single video
@@ -222,6 +281,7 @@ def one(link=None):
             print(f"\n[red]{yt.title} could not be downloaded.[/red]")
             failcount = 1
     print(f"Total 1 track(s). Successful download(s): {successcount}. Failed download(s): {failcount}.")
+    time.sleep(1.5)
 
 
 # Download a playlist
@@ -307,6 +367,7 @@ def many():
                         print(f"\n[red]{yt.title} could not be downloaded.[/red]")
                         failcount += 1
             print(f"[yellow]Total {len(songlist)} track(s).[/yellow] [green]Successful download(s): {successcount}.[/green] [red]Failed download(s): {failcount}.[/red]")
+            time.sleep(1.5)
             break
         elif choice == 'n':
 
@@ -333,6 +394,7 @@ def many():
                         print(f"\n[red]{yt.title} could not be downloaded.[/red]")
                         failcount += 1
             print(f"[yellow]Total {len(songlist)} track(s).[/yellow] [green]Successful download(s): {successcount}.[/green] [red]Failed download(s): {failcount}.[/red]")
+            time.sleep(1.5)
             break
         else:
             print("[red]Invalid input[/red]")
