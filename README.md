@@ -33,7 +33,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-TheFirstFloor™ is aimed towards creating a CLI for managaing your music requirements. It is a simple, easy to use, and lightweight music player. It is a work in progress and is not yet complete. Refer to [TODO](#todo) for more information.
+TheFirstFloor™ is aimed towards creating a CLI for mangaing your music requirements. It is a simple, easy to use, and lightweight music player. It is a work in progress and is not yet complete. Refer to [TODO](#todo) for more information.
 
 ### Features
 
