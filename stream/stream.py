@@ -1,4 +1,3 @@
-from telnetlib import SE
 from pytube import YouTube
 from rich.table import Table
 from rich import print
